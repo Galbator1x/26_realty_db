@@ -13,6 +13,7 @@
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
   </head>
 
@@ -36,65 +37,20 @@
                   <p>город / районный центр</p>
                   <div class="form-group">
                     <select name="oblast_district" class="form-control">
-                      <option value="Череповецкий район">Череповец</option>
-                      <option value="Шекснинский район">Шексна</option>
-                      <option value="Вологодский район">Вологда</option>
-                      <optgroup label="Б">
-                        <option value="Бабаевский район">Бабаево</option>
-                        <option value="Бабушкинский район">Село имени Бабушкина</option>
-                        <option value="Белозерский район">Белозерск</option>
-                      </optgroup>
-                      <optgroup label="В">
-                        <option value="Великоустюгский район">Великий Устюг</option>
-                        <option value="Верховажский район">Верховажье</option>
-                        <option value="Вожегодский район">Вожега</option>
-                        <option value="Вологодский район">Вологда</option>
-                        <option value="Вытегорский район">Вытегра</option>
-                      </optgroup>
-                      <optgroup label="Г">
-                        <option value="Грязовецкий район">Грязовец</option>
-                      </optgroup>
-                      <optgroup label="К">
-                        <option value="Кадуйский район">Кадуй</option>
-                        <option value="Кирилловский район">Кириллов</option>
-                        <option value="Кичменгско-Городецкий район">Кичменгский Городок</option>
-                      </optgroup>
-                      <optgroup label="Л">
-                        <option value="Вашкинский район">Липин Бор</option>
-                      </optgroup>
-                      <optgroup label="Н">
-                        <option value="Никольский район">Никольск</option>
-                        <option value="Нюксенский район">Нюксеница</option>
-                      </optgroup>
-                      <optgroup label="С">
-                        <option value="Сокольский район">Сокол</option>
-                        <option value="Сямженский район">Сямжа</option>
-                      </optgroup>
-                      <optgroup label="Т">
-                        <option value="Тарногский район">Тарногский Городок</option>
-                        <option value="Тотемский район">Тотьма</option>
-                      </optgroup>
-                      <optgroup label="У">
-                        <option value="Усть-Кубинский район">Устье</option>
-                        <option value="Устюженский район">Устюжна</option>
-                      </optgroup>
-                      <optgroup label="Х">
-                        <option value="Харовский район">Харовск</option>
-                      </optgroup>
-                      <optgroup label="Ч">
-                        <option value="Чагодощенский район">Чагода</option>
-                        <option value="Череповецкий район">Череповец</option>
-                      </optgroup>
-                      <optgroup label="Ш">
-                        <option value="Шекснинский район">Шексна</option>
-                        <option value="Междуреченский район">Шуйское</option>
-                      </optgroup>
+                      {% if district %}
+                        <option selected value="{{ district }}">{{ district }}</option>
+                      {% endif %}
+                      {% for city in cities %}
+                        {% if city[0] != district %}
+                          <option value="{{ city[0] }}">{{ city[1] }}</option>
+                        {% endif %}
+                      {% endfor %}
                     </select>
                   </div>
                   <div class="form-group ">
                     <div class="checkbox">
                       <label>
-                        <input type="checkbox" name="new_building" value="True">
+                        <input type="checkbox" name="new_building" value="True" {% if new_building %}checked="checked"{% endif %}>
                         только новостройки
                       </label>
                     </div>
@@ -103,14 +59,14 @@
                   <div class="form-group ">
                     <div class="input-group">
                       <span class="input-group-addon">от</span>
-                      <input autocomplete="off" type="text" value="" name="min_price" class="form-control js-price-format" placeholder="любая">
+                      <input autocomplete="off" type="text" value="{% if min_price %}{{ min_price }}{% endif %}" name="min_price" class="form-control js-price-format" placeholder="любая">
                       <span class="input-group-addon">р.</span>
                     </div>
                   </div>
                   <div class="form-group ">
                     <div class="input-group">
                       <span class="input-group-addon">до</span>
-                      <input autocomplete="off" type="text" value="" name="max_price" class="form-control js-price-format" placeholder="любая">
+                      <input autocomplete="off" type="text" value="{% if max_price %}{{ max_price }}{% endif %}" name="max_price" class="form-control js-price-format" placeholder="любая">
                       <span class="input-group-addon">р.</span>
                     </div>
                   </div>
@@ -120,7 +76,7 @@
             </div>
             <div class="col-sm-8">
               <div class="panel panel-default">
-                {% for ad in ads %}
+                {% for ad in ads.items %}
                   <div class="panel-body">
                     <div class="row">
                       <div class="col-sm-12">
@@ -150,16 +106,36 @@
                   </div>
                   <hr>
                 {% endfor %}
+
                 <div class="panel-body">
-                  <div class="clearfix">
-                    <ul class="pagination pull-right">
-                      <li class="disabled"><span>«</span></li>
-                      <li class="active"><span>1 <span class="sr-only">(current)</span></span></li>
-                      <li><a href="?page=2" role="next">2</a></li>
-                      <li><a href="?page=3" role="next">3</a></li>
-                      <li><a href="?page=4" role="next">4</a></li>
-                      <li><a href="?page=2" role="next">»</a></li>
-                    </ul>
+                  <div class="container-pagination">
+                    {% if ads.pages %}
+                      <ul class="pagination">
+                        {% if ads.has_prev %}
+                          <li><a href="{{ url_for(request.endpoint, page=ads.prev_num, oblast_district=district, min_price=min_price, max_price=max_price, new_building=new_building) }}">«</a></li>
+                        {% else %}
+                          <li class="disabled"><span>«</span></li>
+                        {% endif %}
+                        {% for page in ads.iter_pages() %}
+                          {% if page %}
+                            {% if page != ads.page %}
+                              <li><a href="{{ url_for(request.endpoint, page=page, oblast_district=district, min_price=min_price, max_price=max_price, new_building=new_building) }}">{{ page }}</a></li>
+                            {% else %}
+                              <li class="active"><span>{{ page }}</span></li>
+                            {% endif %}
+                          {% else %}
+                            <li><span>...</span></li>
+                          {% endif %}
+                        {% endfor %}
+                        {% if ads.has_next %}
+                          <li><a href="{{ url_for(request.endpoint, page=ads.next_num, oblast_district=district, min_price=min_price, max_price=max_price, new_building=new_building) }}">»</a></li>
+                        {% else %}
+                          <li class="disabled"><span>»</span></li>
+                        {% endif %}
+                      </ul>
+                    {% else %}
+                      <h3>Объявлений не найдено</h3>
+                    {% endif %}
                   </div>
                 </div>
               </div>
