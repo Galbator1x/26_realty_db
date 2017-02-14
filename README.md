@@ -6,7 +6,8 @@ Ads in json format downloaded through script to the database.
 ## Installation
 
 ```
-$ pip install -r requirements.txt
+$ pip install -r requirements/development.txt
+$ export APP_SETTINGS='config.DevelopmentConfig'
 $ python
 from server import db, app
 with app.app_context():
