@@ -1,11 +1,12 @@
 from models import db, Ad
 
 from datetime import date
+import os
 
 from flask import Flask, render_template, current_app, request
 
 app = Flask(__name__)
-app.config.from_object('config')
+app.config.from_object(os.environ['APP_SETTINGS'])
 db.init_app(app)
 
 @app.route('/', methods=['GET'])
