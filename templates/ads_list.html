@@ -13,8 +13,6 @@
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-
   </head>
 
   <body>
@@ -37,13 +35,8 @@
                   <p>город / районный центр</p>
                   <div class="form-group">
                     <select name="oblast_district" class="form-control">
-                      {% if district %}
-                        <option selected value="{{ district }}">{{ district }}</option>
-                      {% endif %}
                       {% for city in cities %}
-                        {% if city[0] != district %}
-                          <option value="{{ city[0] }}">{{ city[1] }}</option>
-                        {% endif %}
+                          <option {% if city[0] == district %}selected{% endif %} value="{{ city[0] }}">{{ city[1] }}</option>
                       {% endfor %}
                     </select>
                   </div>
