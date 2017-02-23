@@ -6,7 +6,7 @@ import os
 from flask import Flask, render_template, current_app, request
 
 app = Flask(__name__)
-app.config.from_object(os.environ['APP_SETTINGS'])
+app.config.from_object('config')
 db.init_app(app)
 
 @app.route('/', methods=['GET'])
